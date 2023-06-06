@@ -1,25 +1,24 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class FlatTerrain
 {
-    public static Square[,] GenerateTerrain(int x, int y)
+    public static List<Vector3> GenerateTerrain(Vector2 lengthAndWidth, int resolution)
     {
-        float offset = 1.0f;
-        Square[,] terrainMap = new Square[x, y];
+        //4 is for the verticies of the square
+        List<Vector3> terrainMap = new List<Vector3>();
 
-        for(int i = 0; i < x; i++)
+        float xPerStep = lengthAndWidth.x / resolution;
+        float yPerStep = lengthAndWidth.y / resolution;
+        for (int y = 0; y < resolution + 1; y++)
         {
-            for(int j = 0; j < y; j++)
+            for(int x = 0; x < resolution + 1; x++)
             {
-                Square square = new Square();
-                //the points of the triangle are: top left, bottom left, bottom right
-                square.SetLeftTriangle(new Vector3(i, 0, j+offset), new Vector3(i, 0, j), new Vector3(i, 0, j+offset));
-                //the points of the triangle are: top left, top right, bottom right
-                square.SetRightTriangle(new Vector3(i, 0, j+offset), new Vector3(i+offset, 0, j+offset), new Vector3(i, 0, j+offset));
-                terrainMap[i, j] = square;
+                //Debug.Log(i + " " + j);
+                //terrainMap[width * i + j] = new Vector3(i, 0, j);
+                terrainMap.Add(new Vector3(x*xPerStep, 0, y*yPerStep));
             }
         }
-
         return terrainMap;
     }
 }
