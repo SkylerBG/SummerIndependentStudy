@@ -1,8 +1,5 @@
-using JetBrains.Annotations;
-using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class TerrainLoader : MonoBehaviour
 {
@@ -28,6 +25,7 @@ public class TerrainLoader : MonoBehaviour
                 terrain = FlatTerrain.GenerateTerrain(terrainLengthAndWidth, resolution);
                 break;
             case TerrainType.PerlinNoiseTerrain:
+                terrain = PerlinNoiseTerrain.GenerateTerrain(FlatTerrain.GenerateTerrain(terrainLengthAndWidth, resolution), terrainHeight);
                 break;
             case TerrainType.FractalTerrain:
                 break;
@@ -37,14 +35,6 @@ public class TerrainLoader : MonoBehaviour
                 break;
         }
         LoadTerrain(terrain, resolution);
-        
-        //Unity makes triangles in a Counter Clockwise orientation
-        //bottom left, bottom right, top right
-        //top right, top left, bottom left
-        //this means that I only need to store 4 of the vectors and reuse some that are already stored when generating the terrain
-        //terrainMesh.vertices = new Vector3[] { new Vector3(0, 0, 0), new Vector3(0, 0, 1), new Vector3(1, 0, 1),
-        //                                       new Vector3(1, 0, 1), new Vector3(1, 0, 0), new Vector3(0, 0, 0)};
-        //terrainMesh.triangles = new int[] { 0, 1, 2, 3, 4, 5 };
     }
 
     void LoadTerrain(List<Vector3> terrain, int resolution)
@@ -58,8 +48,16 @@ public class TerrainLoader : MonoBehaviour
 
         terrainMesh.vertices = terrain.ToArray();
 
-        List<int> triangles = new List<int>(); 
+        List<Vector2> uvs = new List<Vector2>();
+        foreach(Vector3 v in terrainMesh.vertices)
+        {
+            uvs.Add(new Vector2(v.x, v.z));
+        }
+        terrainMesh.uv = uvs.ToArray();
 
+        gameObject.GetComponent<MeshRenderer>().material.color = Color.white;
+
+        List<int> triangles = new List<int>(); 
         for(int row = 0; row < resolution; row++)
         {
             for(int col = 0; col < resolution; col++)
