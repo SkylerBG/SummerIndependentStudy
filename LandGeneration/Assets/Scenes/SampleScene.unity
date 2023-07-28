@@ -167,10 +167,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe9358cb6d7871d45b6cb695a349e60a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  terrainType: 1
+  terrainType: 2
   terrainLengthAndWidth: {x: 256, y: 256}
-  resolution: 256
-  terrainHeight: 10
+  perlinNoiseInputs:
+    terrainScale: 10
+  fractalNoiseInputs:
+    terrainScale: 50
+    octaves: 10
+    lacunarity: 3
+    persistence: 0.35
+    amplitude: 1
+  worleyNoiseInputs:
+    numberOfPoints: 15
+    terrainLengthAndWidth: {x: 0, y: 0}
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0

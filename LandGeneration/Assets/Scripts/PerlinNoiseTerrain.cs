@@ -1,18 +1,23 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+[System.Serializable]
+public struct PerlinNoiseInputs
+{
+    public int terrainScale;
+};
+
 public class PerlinNoiseTerrain
 {
     //Give this function a list of terrain to apply perlin noise to
-    public static List<Vector3> GenerateTerrain(List<Vector3> terrain, float terrainScale)
+    public static List<Vector3> GenerateTerrain(List<Vector3> terrain, PerlinNoiseInputs inputs)
     {
         Vector3[] terrainArray = terrain.ToArray();
         for(int i = 0; i < terrainArray.Length; i++)
         {
             terrainArray[i].y = PerlinNoise(terrainArray[i].x, terrainArray[i].z);
-            terrainArray[i].y *= terrainScale;
+            terrainArray[i].y *= inputs.terrainScale;
         }
 
         return terrainArray.ToList();

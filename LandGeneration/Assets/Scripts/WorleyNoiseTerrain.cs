@@ -1,28 +1,37 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+[System.Serializable]
+public struct WorleyNoiseInputs
+{
+    public int numberOfPoints;
+    [HideInInspector]
+    public Vector2 terrainLengthAndWidth;
+};
 public class WorleyNoiseTerrain
 {
     [SerializeField]
-    private static int numberOfPoints = 20;
     //Give this function a list of terrain to apply perlin noise to
-    public static List<Vector3> GenerateTerrain(List<Vector3> terrain, float terrainScale, Vector2 terrainLengthAndWidth)
+    public static List<Vector3> GenerateTerrain(List<Vector3> terrain, WorleyNoiseInputs inputs)
     {
         List<Vector2> points = new List<Vector2>();
-        for(int i  = 0; i < numberOfPoints; i++)
+        while(points.Count < inputs.numberOfPoints)
         {
-            points.Add(new Vector2(UnityEngine.Random.Range(0, (int)terrainLengthAndWidth.x), UnityEngine.Random.Range(0, (int)terrainLengthAndWidth.y)));
+            Vector2 potentialPoint = new Vector2(UnityEngine.Random.Range(0, (int)inputs.terrainLengthAndWidth.x), UnityEngine.Random.Range(0, (int)inputs.terrainLengthAndWidth.y));
+            if (!points.Contains(potentialPoint))
+            {
+                points.Add(potentialPoint);
+            }
         }
 
         Vector3[] terrainArray = terrain.ToArray();
-        for(int x = 0; x < terrainLengthAndWidth.x; x++)
+        for(int x = 0; x < inputs.terrainLengthAndWidth.x; x++)
         {
-            for(int z = 0; z < terrainLengthAndWidth.y; z++)
+            for(int z = 0; z < inputs.terrainLengthAndWidth.y; z++)
             {
-                int index = z + x * (int)terrainLengthAndWidth.y;
+                int index = z + x * (int)inputs.terrainLengthAndWidth.y;
                 terrainArray[index].y = WorleyNoise(terrainArray[index].x, terrainArray[index].z, points);
             }    
         }

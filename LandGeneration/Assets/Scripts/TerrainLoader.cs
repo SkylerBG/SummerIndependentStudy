@@ -1,7 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using UnityEngine;
 
 public class TerrainLoader : MonoBehaviour
@@ -16,7 +13,11 @@ public class TerrainLoader : MonoBehaviour
 
     [SerializeField] TerrainType terrainType = TerrainType.FlatTerrain;
     [SerializeField] Vector2 terrainLengthAndWidth;
-    [SerializeField] int resolution, terrainHeight;
+
+    [SerializeField] PerlinNoiseInputs perlinNoiseInputs;
+    [SerializeField] FractalNoiseInputs fractalNoiseInputs;
+    [SerializeField] WorleyNoiseInputs worleyNoiseInputs;
+
 
     // Start is called before the first frame update
     void Start()
@@ -25,23 +26,25 @@ public class TerrainLoader : MonoBehaviour
         switch(terrainType)
         {
             case TerrainType.FlatTerrain:
-                terrain = FlatTerrain.GenerateTerrain(terrainLengthAndWidth, resolution);
+                terrain = FlatTerrain.GenerateTerrain(terrainLengthAndWidth);
                 break;
             case TerrainType.PerlinNoiseTerrain:
-                terrain = PerlinNoiseTerrain.GenerateTerrain(FlatTerrain.GenerateTerrain(terrainLengthAndWidth, resolution), terrainHeight);
+                terrain = PerlinNoiseTerrain.GenerateTerrain(FlatTerrain.GenerateTerrain(terrainLengthAndWidth), perlinNoiseInputs);
                 break;
             case TerrainType.FractalTerrain:
+                terrain = FractalNoiseTerrain.GenerateTerrain(FlatTerrain.GenerateTerrain(terrainLengthAndWidth), fractalNoiseInputs);
                 break;
             case TerrainType.WorleyNoiseTerrain:
-                terrain = WorleyNoiseTerrain.GenerateTerrain(FlatTerrain.GenerateTerrain(terrainLengthAndWidth, resolution), terrainHeight, terrainLengthAndWidth);
+                worleyNoiseInputs.terrainLengthAndWidth = terrainLengthAndWidth;
+                terrain = WorleyNoiseTerrain.GenerateTerrain(FlatTerrain.GenerateTerrain(terrainLengthAndWidth), worleyNoiseInputs);
                 break;
             default:
                 break;
         }
-        LoadTerrain(terrain, resolution, terrainLengthAndWidth);
+        LoadTerrain(terrain, terrainLengthAndWidth);
     }
 
-    void LoadTerrain(List<Vector3> terrain, int resolution, Vector2 lengthAndWidth)
+    void LoadTerrain(List<Vector3> terrain, Vector2 lengthAndWidth)
     {
         if (terrain == null || terrain.Count == 0)
             return;
