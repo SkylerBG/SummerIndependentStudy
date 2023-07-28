@@ -178,7 +178,7 @@ MonoBehaviour:
     persistence: 0.35
     amplitude: 1
   worleyNoiseInputs:
-    numberOfPoints: 15
+    numberOfPoints: 175
     terrainLengthAndWidth: {x: 0, y: 0}
 --- !u!1 &705507993
 GameObject:
