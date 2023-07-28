@@ -1,4 +1,7 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using UnityEngine;
 
 public class TerrainLoader : MonoBehaviour
@@ -30,14 +33,15 @@ public class TerrainLoader : MonoBehaviour
             case TerrainType.FractalTerrain:
                 break;
             case TerrainType.WorleyNoiseTerrain:
+                terrain = WorleyNoiseTerrain.GenerateTerrain(FlatTerrain.GenerateTerrain(terrainLengthAndWidth, resolution), terrainHeight, terrainLengthAndWidth);
                 break;
             default:
                 break;
         }
-        LoadTerrain(terrain, resolution);
+        LoadTerrain(terrain, resolution, terrainLengthAndWidth);
     }
 
-    void LoadTerrain(List<Vector3> terrain, int resolution)
+    void LoadTerrain(List<Vector3> terrain, int resolution, Vector2 lengthAndWidth)
     {
         if (terrain == null || terrain.Count == 0)
             return;
@@ -57,47 +61,21 @@ public class TerrainLoader : MonoBehaviour
 
         gameObject.GetComponent<MeshRenderer>().material.color = Color.white;
 
-        List<int> triangles = new List<int>(); 
-        for(int row = 0; row < resolution; row++)
+        List<int> triangles = new List<int>();
+        int length = (int)terrainLengthAndWidth.x;
+        int width = (int)terrainLengthAndWidth.y;
+
+        int offset = 0;
+        for (int z = 0; z < width; z++)
         {
-            for(int col = 0; col < resolution; col++)
+            for (int x = 0; x < length; x++)
             {
-                int i = (row * resolution) + row + col;
-                triangles.Add(i);
-                triangles.Add(i + resolution + 1);
-                triangles.Add(i + resolution + 2);
-
-                triangles.Add(i);
-                triangles.Add(i + resolution + 2);
-                triangles.Add(i+1);
+                int index = (x + z * width) + offset;
+                triangles.AddRange(new int[] { index, index + 1 + width, index + 1 });
+                triangles.AddRange(new int[] { index + 1, index + 1 + width, index + 2 + width });
             }
+            offset++;
         }
-
         terrainMesh.triangles = triangles.ToArray();
-
     }
 }
-
-
-//foreach(Vector3 point in terrain)
-//{
-//    Debug.Log(point);
-//}
-
-//terrainMesh.vertices = terrain.ToArray();
-//int[] triangles = new int[terrain.Count * 3 / 2];
-
-//for (int i = 0; i < triangles.Length; i += 6)
-//{
-//    triangles[i] = i;
-//    triangles[i + 1] = i + 1;
-//    triangles[i + 2] = (i + 1) + (width * 2);
-//    triangles[i + 3] = (i + 1) + (width * 2);
-//    triangles[i + 4] = i + (width * 2);
-//    triangles[i + 5] = i;
-//}
-
-//for(int i = 0; i < triangles.Length; i++)
-//{
-//    Debug.Log("triangles[" + i + "]: " + triangles[i]);
-//}

@@ -13,7 +13,6 @@ public class PerlinNoiseTerrain
         {
             terrainArray[i].y = PerlinNoise(terrainArray[i].x, terrainArray[i].z);
             terrainArray[i].y *= terrainScale;
-            //Debug.Log("(" + terrainArray[i].x + ", " + terrainArray[i].z + ")" + ": " + terrainArray[i].y);
         }
 
         return terrainArray.ToList();
@@ -31,8 +30,8 @@ public class PerlinNoiseTerrain
 
         // Determine interpolation weights
         // Could also use higher order polynomial/s-curve here
-        float sx = 0.5f;//planePoint.x - x0;
-        float sy = 0.5f;//planePoint.y - y0;
+        float sx = 0.05f;//planePoint.x - x0;
+        float sy = 0.05f;//planePoint.y - y0;
 
         // Interpolate between grid point gradients
         float n0, n1, ix0, ix1, value;

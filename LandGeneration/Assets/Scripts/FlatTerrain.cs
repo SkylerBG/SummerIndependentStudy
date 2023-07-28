@@ -1,24 +1,24 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System;
 
 public class FlatTerrain
 {
     public static List<Vector3> GenerateTerrain(Vector2 lengthAndWidth, int resolution)
     {
-        //4 is for the verticies of the square
         List<Vector3> terrainMap = new List<Vector3>();
 
-        float xPerStep = lengthAndWidth.x / resolution;
-        float yPerStep = lengthAndWidth.y / resolution;
-        for (int y = 0; y < resolution + 1; y++)
+        float width = lengthAndWidth.x;
+        float length = lengthAndWidth.y; 
+
+        for(float z = 0; z <= width; z+=(resolution / width))
         {
-            for(int x = 0; x < resolution + 1; x++)
+            for(float x = 0; x <= length; x+=(resolution / length))
             {
-                //Debug.Log(i + " " + j);
-                //terrainMap[width * i + j] = new Vector3(i, 0, j);
-                terrainMap.Add(new Vector3(x*xPerStep, 0, y*yPerStep));
+                terrainMap.Add(new Vector3(x,0.0f,z));
             }
         }
+
         return terrainMap;
     }
 }

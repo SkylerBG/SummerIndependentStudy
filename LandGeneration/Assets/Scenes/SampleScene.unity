@@ -168,9 +168,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   terrainType: 1
-  terrainLengthAndWidth: {x: 16, y: 16}
-  resolution: 8
-  terrainHeight: 5
+  terrainLengthAndWidth: {x: 256, y: 256}
+  resolution: 256
+  terrainHeight: 10
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
